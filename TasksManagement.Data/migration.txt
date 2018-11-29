@@ -1,0 +1,5 @@
+﻿1:
+dotnet ef migrations add CreateTasksDB --project TasksManagement.Data --startup-project TasksManagement
+
+2:
+dotnet ef database update --project TasksManagement.Data --startup-project TasksManagement
