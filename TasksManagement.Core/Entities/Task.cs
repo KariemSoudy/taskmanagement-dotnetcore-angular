@@ -19,7 +19,7 @@ namespace TasksManagement.Core.Entities
         [Required]
         public int OwnerUserID { get; set; }
 
-        public int AssignedToUserID { get; set; }
+        public int? AssignedToUserID { get; set; }
 
         [Required]
         public User OwnerUser { get; set; }

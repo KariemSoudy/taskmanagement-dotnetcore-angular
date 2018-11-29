@@ -50,7 +50,7 @@ namespace TasksManagement.Data
                 entity.Property(t => t.Description);
                 entity.Property(t => t.Created).IsRequired();
                 entity.Property(t => t.OwnerUserID).IsRequired();
-                entity.Property(t => t.AssignedToUserID);
+                entity.Property(t => t.AssignedToUserID).IsRequired(false);
 
 
                 entity.HasOne(t => t.OwnerUser).WithMany(u => u.OwnedTasks).HasForeignKey(p => p.OwnerUserID).OnDelete(DeleteBehavior.Restrict);
