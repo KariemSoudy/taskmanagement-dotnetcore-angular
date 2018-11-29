@@ -44,7 +44,7 @@ namespace TasksManagement.Data.Migrations
                         .ValueGeneratedOnAdd()
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<int>("AssignedToUserID");
+                    b.Property<int?>("AssignedToUserID");
 
                     b.Property<DateTime>("Created");
 
@@ -62,6 +62,11 @@ namespace TasksManagement.Data.Migrations
                     b.HasIndex("OwnerUserID");
 
                     b.ToTable("Tasks");
+
+                    b.HasData(
+                        new { ID = 1, Created = new DateTime(2018, 11, 30, 2, 21, 13, 217, DateTimeKind.Local), Description = "Task 1 Description", OwnerUserID = 2, Title = "Task1" },
+                        new { ID = 2, Created = new DateTime(2018, 11, 30, 2, 21, 13, 218, DateTimeKind.Local), Description = "Task 2 Description", OwnerUserID = 3, Title = "Task2" }
+                    );
                 });
 
             modelBuilder.Entity("TasksManagement.Core.Entities.User", b =>
@@ -83,7 +88,8 @@ namespace TasksManagement.Data.Migrations
 
                     b.HasData(
                         new { ID = 1, Name = "Admin1", RoleID = 1 },
-                        new { ID = 2, Name = "Support1", RoleID = 2 }
+                        new { ID = 2, Name = "Support1", RoleID = 2 },
+                        new { ID = 3, Name = "Support2", RoleID = 2 }
                     );
                 });
 

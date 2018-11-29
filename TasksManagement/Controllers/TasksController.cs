@@ -11,18 +11,18 @@ namespace TasksManagement.Controllers
     [ApiController]
     public class TasksController : ControllerBase
     {
-        private readonly IRepository<System.Threading.Tasks.Task> _repository;
+        private readonly IUnitOfWork _tasksUnitOfWork;
 
-        public TasksController(IRepository<System.Threading.Tasks.Task> repository)
+        public TasksController(IUnitOfWork tasksUnitOfWork)
         {
-            _repository = repository;
+            _tasksUnitOfWork = tasksUnitOfWork;
         }
 
         // GET: api/Tasks
         [HttpGet]
-        public IEnumerable<System.Threading.Tasks.Task> GetTasks()
+        public IEnumerable<Core.Entities.Task> GetTasks()
         {
-            return _repository.GetAll();
+            return _tasksUnitOfWork.GetTaksRepository().GetAll();
         }
 
         // GET: api/Tasks/5
@@ -34,7 +34,7 @@ namespace TasksManagement.Controllers
                 return BadRequest(ModelState);
             }
 
-            var task = await _context.Tasks.FindAsync(id);
+            var task = await _tasksUnitOfWork.GetTaksRepository().GetAsync(p => p.ID == id);
 
             if (task == null)
             {
@@ -46,7 +46,7 @@ namespace TasksManagement.Controllers
 
         // PUT: api/Tasks/5
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutTask([FromRoute] int id, [FromBody] System.Threading.Tasks.Task task)
+        public async Task<IActionResult> PutTask([FromRoute] int id, [FromBody] Core.Entities.Task task)
         {
             if (!ModelState.IsValid)
             {
@@ -58,11 +58,11 @@ namespace TasksManagement.Controllers
                 return BadRequest();
             }
 
-            _context.Entry(task).State = EntityState.Modified;
+            _tasksUnitOfWork.GetTaksRepository().Edit(task);
 
             try
             {
-                await _context.SaveChangesAsync();
+                await _tasksUnitOfWork.SaveChangesAsync();
             }
             catch (DbUpdateConcurrencyException)
             {
@@ -81,15 +81,16 @@ namespace TasksManagement.Controllers
 
         // POST: api/Tasks
         [HttpPost]
-        public async Task<IActionResult> PostTask([FromBody] System.Threading.Tasks.Task task)
+        public async Task<IActionResult> PostTask([FromBody] Core.Entities.Task task)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
 
-            _context.Tasks.Add(task);
-            await _context.SaveChangesAsync();
+            _tasksUnitOfWork.GetTaksRepository().Add(task);
+
+            await _tasksUnitOfWork.SaveChangesAsync();
 
             return CreatedAtAction("GetTask", new { id = task.ID }, task);
         }
@@ -103,21 +104,22 @@ namespace TasksManagement.Controllers
                 return BadRequest(ModelState);
             }
 
-            var task = await _context.Tasks.FindAsync(id);
+            var task = await _tasksUnitOfWork.GetTaksRepository().GetAsync(p => p.ID == id);
             if (task == null)
             {
                 return NotFound();
             }
 
-            _context.Tasks.Remove(task);
-            await _context.SaveChangesAsync();
+            _tasksUnitOfWork.GetTaksRepository().Delete(p => p.ID == id);
+
+            await _tasksUnitOfWork.SaveChangesAsync();
 
             return Ok(task);
         }
 
         private bool TaskExists(int id)
         {
-            return _context.Tasks.Any(e => e.ID == id);
+            return _tasksUnitOfWork.GetTaksRepository().Get(e => e.ID == id).Any();
         }
     }
 }

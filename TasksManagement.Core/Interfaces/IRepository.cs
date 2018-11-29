@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq.Expressions;
+using System.Threading.Tasks;
 
 namespace TasksManagement.Core.Interfaces
 {
@@ -9,7 +10,11 @@ namespace TasksManagement.Core.Interfaces
         bool Add(T entity);
         bool Edit(T entity);
         bool Delete(Expression<Func<T, bool>> predicate);
+
         IEnumerable<T> GetAll();
         IEnumerable<T> Get(Expression<Func<T, bool>> predicate);
+
+        Task<List<T>> GetAllAsync();
+        Task<List<T>> GetAsync(Expression<Func<T, bool>> predicate);
     }
 }

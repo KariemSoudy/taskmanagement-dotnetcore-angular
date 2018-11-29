@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
+using System.Threading.Tasks;
 using TasksManagement.Core.Interfaces;
 
 namespace TasksManagement.Data
@@ -37,7 +38,7 @@ namespace TasksManagement.Data
         {
             try
             {
-                _context.RemoveRange(_context.Set<T>().Where(predicate));
+                _context.RemoveRange(dbSet.Where(predicate));
             }
             catch
             {
@@ -70,7 +71,17 @@ namespace TasksManagement.Data
 
         public IEnumerable<T> Get(Expression<Func<T, bool>> predicate)
         {
-            return _context.Set<T>().Where(predicate).AsEnumerable<T>();
+            return dbSet.Where(predicate).AsEnumerable<T>();
+        }
+
+        public Task<List<T>> GetAllAsync()
+        {
+            return dbSet.ToListAsync<T>();
+        }
+
+        public Task<List<T>> GetAsync(Expression<Func<T, bool>> predicate)
+        {
+            return dbSet.Where(predicate).ToListAsync<T>();
         }
     }
 }
