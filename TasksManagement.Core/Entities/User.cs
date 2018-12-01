@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace TasksManagement.Core.Entities
 {
-    public class User
+    public class User:IdentityUser
     {
         public User()
         {
@@ -16,6 +16,12 @@ namespace TasksManagement.Core.Entities
 
         [Required]
         public string Name { get; set; }
+
+        [Required]
+        public string Username { get; set; }
+
+        [Required]
+        public string Password { get; set; }
 
         [Required]
         public int RoleID { get; set; }

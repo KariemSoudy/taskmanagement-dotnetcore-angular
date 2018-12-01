@@ -1,6 +1,6 @@
 ﻿using System;
-using TasksManagement.Core.Entities;
-using TasksManagement.Core.Interfaces;
+using System.Threading.Tasks;
+using TasksManagement.Data.Interfaces;
 
 namespace TasksManagement.Data
 {
@@ -8,31 +8,18 @@ namespace TasksManagement.Data
     {
         private TaskManagementDBContext _context = new TaskManagementDBContext();
 
-        private IRepository<User> _userRepository;
-        private IRepository<Role> _roleRepository;
-        private IRepository<Task> _taskRepository;
+        private IRepository<Data.Entities.Task> _taskRepository;
 
-        public IRepository<User> GetUserRepository()
-        {
-            if (this._userRepository == null) this._userRepository = new Repository<User>(_context);
-            return _userRepository;
-        }
 
-        public IRepository<Role> GetRoleRepository()
+        public IRepository<Data.Entities.Task> GetTaksRepository()
         {
-            if (this._roleRepository == null) this._roleRepository = new Repository<Role>(_context);
-            return _roleRepository;
-        }
-
-        public IRepository<Task> GetTaksRepository()
-        {
-            if (this._taskRepository == null) this._taskRepository = new Repository<Task>(_context);
+            if (this._taskRepository == null) this._taskRepository = new Repository<Data.Entities.Task>(_context);
             return _taskRepository;
         }
 
         public void SaveChanges() => _context.SaveChangesAsync();
 
-        public System.Threading.Tasks.Task SaveChangesAsync() => _context.SaveChangesAsync();
+        public Task SaveChangesAsync() => _context.SaveChangesAsync();
 
 
 

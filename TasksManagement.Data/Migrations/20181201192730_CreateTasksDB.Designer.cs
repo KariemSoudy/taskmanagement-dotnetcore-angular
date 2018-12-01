@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using TasksManagement.Data;
 
 namespace TasksManagement.Data.Migrations
 {
     [DbContext(typeof(TaskManagementDBContext))]
-    partial class TaskManagementDBContextModelSnapshot : ModelSnapshot
+    [Migration("20181201192730_CreateTasksDB")]
+    partial class CreateTasksDB
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

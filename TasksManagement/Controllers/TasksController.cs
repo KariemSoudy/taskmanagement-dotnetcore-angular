@@ -1,12 +1,14 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using TasksManagement.Core.Interfaces;
+using TasksManagement.Data.Interfaces;
 
 namespace TasksManagement.Controllers
 {
+    [Authorize]
     [Route("api/[controller]")]
     [ApiController]
     public class TasksController : ControllerBase
@@ -20,7 +22,7 @@ namespace TasksManagement.Controllers
 
         // GET: api/Tasks
         [HttpGet]
-        public IEnumerable<Core.Entities.Task> GetTasks()
+        public IEnumerable<Data.Entities.Task> GetTasks()
         {
             return _tasksUnitOfWork.GetTaksRepository().GetAll();
         }
@@ -46,7 +48,7 @@ namespace TasksManagement.Controllers
 
         // PUT: api/Tasks/5
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutTask([FromRoute] int id, [FromBody] Core.Entities.Task task)
+        public async Task<IActionResult> PutTask([FromRoute] int id, [FromBody] Data.Entities.Task task)
         {
             if (!ModelState.IsValid)
             {
@@ -81,7 +83,7 @@ namespace TasksManagement.Controllers
 
         // POST: api/Tasks
         [HttpPost]
-        public async Task<IActionResult> PostTask([FromBody] Core.Entities.Task task)
+        public async Task<IActionResult> PostTask([FromBody] Data.Entities.Task task)
         {
             if (!ModelState.IsValid)
             {
