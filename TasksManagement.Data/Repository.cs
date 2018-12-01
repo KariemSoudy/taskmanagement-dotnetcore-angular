@@ -64,14 +64,14 @@ namespace TasksManagement.Data
             return true;
         }
 
-        public IEnumerable<T> GetAll()
+        public IQueryable<T> GetAll()
         {
-            return dbSet.AsEnumerable<T>();
+            return dbSet;
         }
 
-        public IEnumerable<T> Get(Expression<Func<T, bool>> predicate)
+        public IQueryable<T> Get(Expression<Func<T, bool>> predicate)
         {
-            return dbSet.Where(predicate).AsEnumerable<T>();
+            return dbSet.Where(predicate);
         }
 
         public Task<List<T>> GetAllAsync()

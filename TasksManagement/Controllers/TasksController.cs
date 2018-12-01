@@ -1,14 +1,15 @@
-﻿using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using TasksManagement.Data;
 using TasksManagement.Data.Interfaces;
+using TasksManagement.Models;
 
 namespace TasksManagement.Controllers
 {
-    [Authorize]
+    //[Authorize]
     [Route("api/[controller]")]
     [ApiController]
     public class TasksController : ControllerBase
@@ -22,9 +23,28 @@ namespace TasksManagement.Controllers
 
         // GET: api/Tasks
         [HttpGet]
-        public IEnumerable<Data.Entities.Task> GetTasks()
+        public IEnumerable<TaskModel> GetTasks()
         {
-            return _tasksUnitOfWork.GetTaksRepository().GetAll();
+            return from task in _tasksUnitOfWork.GetTaksRepository().GetAll().IncludeMultiple(t => t.OwnerUser, t => t.AssignedToUser)
+                   select new TaskModel
+                   {
+                       ID = task.ID,
+                       Title = task.Title,
+                       Description = task.Description,
+                       Created = task.Created,
+                       OwnerUser = new UserModel()
+                       {
+                           UserID = task.OwnerUser.Id,
+                           Username = task.OwnerUser.UserName,
+                           Email = task.OwnerUser.Email
+                       },
+                       AssignedToUser = task.AssignedToUser != null ? new UserModel()
+                       {
+                           UserID = task.AssignedToUser.Id,
+                           Username = task.AssignedToUser.UserName,
+                           Email = task.AssignedToUser.Email
+                       } : null,
+                   };
         }
 
         // GET: api/Tasks/5
