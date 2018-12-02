@@ -45,13 +45,13 @@ namespace TasksManagement.Controllers
                        Created = task.Created,
                        OwnerUser = new UserModel()
                        {
-                           ID = task.OwnerUserID,
+                           ID = task.OwnerUser.Id,
                            Username = task.OwnerUser.UserName,
                            Email = task.OwnerUser.Email
                        },
                        AssignedToUser = task.AssignedToUser != null ? new UserModel()
                        {
-                           ID = task.AssignedToUserID,
+                           ID = task.AssignedToUser.Id,
                            Username = task.AssignedToUser.UserName,
                            Email = task.AssignedToUser.Email
                        } : null,
@@ -89,8 +89,9 @@ namespace TasksManagement.Controllers
 
             var user = await _userManager.GetUserAsync(HttpContext.User);
 
-            var tasks = await _tasksUnitOfWork.GetTaksRepository().GetAsync(p => p.ID == id);
-            if (tasks.Count == 0)
+            var tasks = _tasksUnitOfWork.GetTaksRepository().GetAll().Where(p => p.ID == id).IncludeMultiple(t => t.OwnerUser, t => t.AssignedToUser);
+
+            if (tasks.Count() == 0)
                 return NotFound();
 
             var task = tasks.FirstOrDefault();
@@ -117,7 +118,15 @@ namespace TasksManagement.Controllers
                     if (model.AssignedToUser.ID == user.Id)
                         return BadRequest(new { message = "You can't assign the task to yourself" });
                     else
-                        task.AssignedToUserID = model.AssignedToUser.ID;
+                    {
+                        if (model.AssignedToUser.ID == "0")
+                            task.AssignedToUserID = null;
+                        else
+                        {
+                            task.AssignedToUserID = model.AssignedToUser.ID;
+                            task.Completed = false;
+                        }
+                    }
                 }
                 else
                     return BadRequest(new { message = "You are not owner for this task" });
@@ -141,6 +150,8 @@ namespace TasksManagement.Controllers
                 }
             }
 
+            task = _tasksUnitOfWork.GetTaksRepository().GetAll().Where(p => p.ID == id).IncludeMultiple(t => t.OwnerUser, t => t.AssignedToUser).FirstOrDefault();
+
             return Ok(new TaskModel
             {
                 ID = task.ID,
@@ -149,13 +160,13 @@ namespace TasksManagement.Controllers
                 Created = task.Created,
                 OwnerUser = new UserModel()
                 {
-                    ID = task.OwnerUserID,
+                    ID = task.OwnerUser.Id,
                     Username = task.OwnerUser.UserName,
                     Email = task.OwnerUser.Email
                 },
                 AssignedToUser = task.AssignedToUser != null ? new UserModel()
                 {
-                    ID = task.AssignedToUserID,
+                    ID = task.AssignedToUser.Id,
                     Username = task.AssignedToUser.UserName,
                     Email = task.AssignedToUser.Email
                 } : null,

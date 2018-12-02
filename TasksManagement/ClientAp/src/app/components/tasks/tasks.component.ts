@@ -139,8 +139,14 @@ export class TasksComponent implements OnInit {
     this._tasksService.assignTask(taskID, userID)
       .subscribe(task => {
         this.getAllTasks();
+
         if (task) {
-          this.successMessage = `Task ${task.title} assigned to ${task.assignedToUser.username}`;
+          if (task.assignedToUser) {
+            this.successMessage = `Task ${task.title} assigned to ${task.assignedToUser.username}`;
+          } else {
+            this.successMessage = `Task ${task.title} released`;
+          }
+
         }
       }, error => {
         this.errorMessage = error;
