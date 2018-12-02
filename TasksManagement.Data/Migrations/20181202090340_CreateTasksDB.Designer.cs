@@ -10,7 +10,7 @@ using TasksManagement.Data;
 namespace TasksManagement.Data.Migrations
 {
     [DbContext(typeof(TaskManagementDBContext))]
-    [Migration("20181201192730_CreateTasksDB")]
+    [Migration("20181202090340_CreateTasksDB")]
     partial class CreateTasksDB
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -45,8 +45,8 @@ namespace TasksManagement.Data.Migrations
                     b.ToTable("AspNetRoles");
 
                     b.HasData(
-                        new { Id = "14d3c352-91e9-4b4a-9c10-a37d0d6b64b9", ConcurrencyStamp = "1a50c55c-4e9b-4c88-8836-39b3849a68b9", Name = "Admin", NormalizedName = "ADMIN" },
-                        new { Id = "9bd8960f-68a5-4f0c-83f6-6cad77fd5339", ConcurrencyStamp = "d3732283-77f7-4ab7-a176-7ad3cdf64e7f", Name = "Support", NormalizedName = "SUPPORT" }
+                        new { Id = "f14132c8-d81a-48fc-9de5-795659732f44", ConcurrencyStamp = "6aaf6f59-6c0e-46d4-acb9-3bf0e027fadd", Name = "Admin", NormalizedName = "ADMIN" },
+                        new { Id = "28c4c1ea-38e8-4ffd-bf92-76ac6a38c1e7", ConcurrencyStamp = "654f1010-e98c-4073-831f-5712e99f6c9c", Name = "Support", NormalizedName = "SUPPORT" }
                     );
                 });
 
@@ -143,6 +143,10 @@ namespace TasksManagement.Data.Migrations
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
                     b.Property<string>("AssignedToUserID");
+
+                    b.Property<bool>("Completed")
+                        .ValueGeneratedOnAdd()
+                        .HasDefaultValue(false);
 
                     b.Property<DateTime>("Created");
 

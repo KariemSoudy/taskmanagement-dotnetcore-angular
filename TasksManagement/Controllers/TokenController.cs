@@ -55,6 +55,7 @@ namespace TasksManagement.Controllers
                 }
 
                 var user = await _userManager.FindByNameAsync(loginModel.Username);
+                var roles = await _userManager.GetRolesAsync(user);
 
                 return Ok(
                     new AuthUserModel()
@@ -62,6 +63,7 @@ namespace TasksManagement.Controllers
                         UserID = user.Id,
                         Username = user.UserName,
                         Email = user.Email,
+                        Role = roles.Count > 0 ? roles[0] : "",
                         Token = GenerateToken(user)
                     }
                 );

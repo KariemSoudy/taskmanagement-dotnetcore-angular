@@ -12,20 +12,20 @@ import { HTTP_INTERCEPTORS, HttpClientModule } from '@angular/common/http';
 import { AuthTokenInterceptor } from './interceptors/auth-token.interceptor';
 import { TasksService } from './services/tasks.service';
 import { UnauthorizedInterceptor } from './interceptors/unauthorized.interceptor';
-import { ReactiveFormsModule } from '@angular/forms';
-import { InjectionToken } from '@angular/core';
+import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { TasksComponent } from './components/tasks/tasks.component';
 import { MaterialsModule } from './materials.module';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-
-export const BASE_URL = new InjectionToken<string>('BASE_URL');
+import { UsersService } from './services/users.service';
+import { AssigntoDialogComponent } from './components/tasks/assignto-dialog/assignto-dialog.component';
 
 @NgModule({
-  declarations: [AppComponent, HomeComponent, LoginComponent, TasksComponent],
-  imports: [BrowserModule, ReactiveFormsModule, AppRoutingModule, HttpClientModule, MaterialsModule, BrowserAnimationsModule],
+  declarations: [AppComponent, HomeComponent, LoginComponent, TasksComponent, AssigntoDialogComponent],
+  imports: [BrowserModule, FormsModule, ReactiveFormsModule, AppRoutingModule, HttpClientModule, MaterialsModule, BrowserAnimationsModule],
   providers: [
     AuthService,
     TasksService,
+    UsersService,
     AuthGuard,
     NoAuthGuard,
     {
@@ -37,9 +37,9 @@ export const BASE_URL = new InjectionToken<string>('BASE_URL');
       provide: HTTP_INTERCEPTORS,
       useClass: UnauthorizedInterceptor,
       multi: true
-    },
-    { provide: BASE_URL, useValue: document.getElementsByTagName('base')[0].href }
+    }
   ],
-  bootstrap: [AppComponent]
+  bootstrap: [AppComponent],
+  entryComponents: [AssigntoDialogComponent]
 })
 export class AppModule { }

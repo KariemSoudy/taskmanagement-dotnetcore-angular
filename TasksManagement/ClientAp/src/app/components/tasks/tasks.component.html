@@ -1,24 +1,125 @@
+<!--New Task Button  Start-->
+<button *ngIf="isSupport" mat-list-item (click)="showNewForm()">
+  <mat-icon>library_add</mat-icon>
+  <em>New Task</em>
+</button>
+<!--New Task Button  End-->
+
+
+<!--New Task Form Start-->
+<form *ngIf="isSupport && newFormVisible" class="form-signin needs-validation" [formGroup]="newForm" (ngSubmit)="addTask()">
+  <h1 class="h3 mb-3 font-weight-normal">New Task</h1>
+
+  <label for="title" class="sr-only">Title</label>
+  <input type="text" formControlName="title" class="form-control" placeholder="title" required />
+
+  <label for="description" class="sr-only">Description</label>
+  <input type="text" formControlName="description" class="form-control" placeholder="description" required />
+
+  <button class="btn btn-lg btn-primary btn-block" type="submit" [disabled]="!newForm.valid">
+    Save
+  </button>
+</form>
+<!--New Task Form End-->
+
+
+<!--Alert Messages Start-->
+<div class="alert alert-danger" *ngIf="errorMessage">
+  <strong>Error</strong> {{ errorMessage }}.
+</div>
+<div class="alert alert-success" *ngIf="successMessage">
+  <strong>Success</strong> {{ successMessage }}.
+</div>
+<!--Alert Messages End-->
+
+
+<!--Owned Tasks Start-->
+<h1>Tasks</h1>
 <table class="table">
   <thead>
     <tr>
       <th scope="col">Title</th>
       <th scope="col">Description</th>
+      <th scope="col">Assigned To</th>
       <th scope="col">Created</th>
       <th scope="col"></th>
     </tr>
   </thead>
   <tbody>
     <tr *ngFor="let task of tasks">
-      <td>{{task.title}}</td>
-      <td>{{task.description}}</td>
-      <td>{{task.created | date : 'shortDate'}}</td>
-      <td>
-        <button mat-button [matMenuTriggerFor]="contextMenu">Actions</button>
-        <mat-menu #contextMenu="matMenu">
-          <button mat-menu-item [routerLink]="['/horizontal', task.Id]" routerLinkActive="router-link-active">Edit</button>
-          <button mat-menu-item [routerLink]="['/vertical', task.Id]" routerLinkActive="router-link-active">Delete</button>
-        </mat-menu>
-      </td>
+      <ng-container *ngIf="(task.ownerUser.username.toLowerCase() === user.username.toLowerCase()) || isAdmin">
+        <td>
+          <mat-icon *ngIf="task.completed" style='color:#00d200'>check</mat-icon>
+          {{ task.title }}
+        </td>
+        <td>{{ task.description }}</td>
+        <td><span *ngIf="task.assignedToUser">{{task.assignedToUser.username}}</span></td>
+        <td>{{ task.created | date: 'shortDate' }}</td>
+        <td>
+          <button mat-button [matMenuTriggerFor]="contextMenu" class='actions'>Actions</button>
+          <mat-menu #contextMenu="matMenu">
+
+            <button (click)="deleteTask(task.id)" mat-menu-item>
+              <mat-icon>delete</mat-icon>
+              <em>Delete</em>
+            </button>
+
+            <button (click)="openDialog(task)" mat-menu-item *ngIf="(task.ownerUser.username.toLowerCase() === user.username.toLowerCase()) && isSupport">
+              <!-- <select (click)="$event.stopPropagation()" id="assigntoemployee">
+                <option value="0" [selected]="!task.assignedToUser">
+                  -No User-
+                </option>
+                <option *ngFor="let user of users" [value]="user.id" [selected]="task.assignedToUser && user.id === task.assignedToUser.id">
+                  {{user.username}}
+                </option>
+              </select> -->
+
+              <mat-icon>send</mat-icon>
+              <em>Assign</em>
+
+            </button>
+
+          </mat-menu>
+        </td>
+      </ng-container>
     </tr>
   </tbody>
 </table>
+<!--Owned Tasks End-->
+
+
+<!--My Tasks Start-->
+<ng-container *ngIf="isSupport && !isAdmin">
+  <h1>Assigned Tasks</h1>
+  <table class="table">
+    <thead>
+      <tr>
+        <th scope="col">Title</th>
+        <th scope="col">Description</th>
+        <th scope="col">Assigned To</th>
+        <th scope="col">Created</th>
+        <th scope="col"></th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let task of tasks">
+        <ng-container *ngIf="task.assignedToUser && task.assignedToUser.username.toLowerCase() === user.username.toLowerCase()">
+          <td>{{ task.title }}</td>
+          <td>{{ task.description }}</td>
+          <td><span *ngIf="task.assignedToUser">{{task.assignedToUser.username}}</span></td>
+          <td>{{ task.created | date: 'shortDate' }}</td>
+          <td>
+            <button mat-button [matMenuTriggerFor]="contextMenu" class='actions'>Actions</button>
+            <mat-menu #contextMenu="matMenu">
+              <button (click)="finishTask(task.id)" mat-menu-item>
+                <mat-icon>check</mat-icon>
+                <em>Done</em>
+              </button>
+            </mat-menu>
+          </td>
+        </ng-container>
+      </tr>
+    </tbody>
+  </table>
+</ng-container>
+<!--My Tasks End-->

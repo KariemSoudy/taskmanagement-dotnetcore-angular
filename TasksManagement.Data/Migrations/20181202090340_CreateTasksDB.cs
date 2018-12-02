@@ -163,7 +163,8 @@ namespace TasksManagement.Data.Migrations
                     Description = table.Column<string>(nullable: true),
                     Created = table.Column<DateTime>(nullable: false),
                     OwnerUserID = table.Column<string>(nullable: false),
-                    AssignedToUserID = table.Column<string>(nullable: true)
+                    AssignedToUserID = table.Column<string>(nullable: true),
+                    Completed = table.Column<bool>(nullable: false, defaultValue: false)
                 },
                 constraints: table =>
                 {
@@ -185,12 +186,12 @@ namespace TasksManagement.Data.Migrations
             migrationBuilder.InsertData(
                 table: "AspNetRoles",
                 columns: new[] { "Id", "ConcurrencyStamp", "Name", "NormalizedName" },
-                values: new object[] { "14d3c352-91e9-4b4a-9c10-a37d0d6b64b9", "1a50c55c-4e9b-4c88-8836-39b3849a68b9", "Admin", "ADMIN" });
+                values: new object[] { "f14132c8-d81a-48fc-9de5-795659732f44", "6aaf6f59-6c0e-46d4-acb9-3bf0e027fadd", "Admin", "ADMIN" });
 
             migrationBuilder.InsertData(
                 table: "AspNetRoles",
                 columns: new[] { "Id", "ConcurrencyStamp", "Name", "NormalizedName" },
-                values: new object[] { "9bd8960f-68a5-4f0c-83f6-6cad77fd5339", "d3732283-77f7-4ab7-a176-7ad3cdf64e7f", "Support", "SUPPORT" });
+                values: new object[] { "28c4c1ea-38e8-4ffd-bf92-76ac6a38c1e7", "654f1010-e98c-4073-831f-5712e99f6c9c", "Support", "SUPPORT" });
 
             migrationBuilder.CreateIndex(
                 name: "IX_AspNetRoleClaims_RoleId",

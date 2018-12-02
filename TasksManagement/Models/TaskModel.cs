@@ -10,5 +10,6 @@ namespace TasksManagement.Models
         public DateTime Created { get; set; }
         public UserModel OwnerUser { get; set; }
         public UserModel AssignedToUser { get; set; }
+        public bool Completed { get; set; }
     }
 }

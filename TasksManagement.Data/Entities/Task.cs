@@ -25,5 +25,7 @@ namespace TasksManagement.Data.Entities
         public User OwnerUser { get; set; }
 
         public User AssignedToUser { get; set; }
+
+        public bool Completed { get; set; }
     }
 }

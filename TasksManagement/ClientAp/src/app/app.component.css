@@ -2,6 +2,11 @@
   background-color: #fff;
 }
 
+.username{
+    width: 100%;
+    text-align: right;
+}
+
 .example-container {
   display: flex;
   flex-direction: column;
