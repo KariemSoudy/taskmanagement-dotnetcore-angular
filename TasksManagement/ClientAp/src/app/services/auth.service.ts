@@ -3,6 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { map } from 'rxjs/operators';
 import { Observable, BehaviorSubject } from 'rxjs';
 import { User } from '../models/user';
+import { environment } from 'src/environments/environment';
 
 @Injectable({
   providedIn: 'root'
@@ -10,10 +11,8 @@ import { User } from '../models/user';
 export class AuthService {
   private userBehavior: BehaviorSubject<User>;
   public user: Observable<User>;
-  private baseURL = 'http://localhost:32598/';
 
-  constructor(private _http: HttpClient) {// , @Inject('BASE_URL') _baseUrl: string) {
-    // this.baseURL = _baseUrl;
+  constructor(private _http: HttpClient) {
     this.userBehavior = new BehaviorSubject<User>(
       JSON.parse(localStorage.getItem('user'))
     );
@@ -27,7 +26,7 @@ export class AuthService {
 
   login(username: string, password: string) {
     return this._http
-      .post<User>(this.baseURL + '/api/token/generate', { username, password })
+      .post<User>(environment.BaseURL + '/api/token/generate', { username, password })
       .pipe(
         map(user => {
           if (user && user.token) {

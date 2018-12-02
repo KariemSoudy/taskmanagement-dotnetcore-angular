@@ -3,7 +3,6 @@ import { NgModule } from '@angular/core';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
-import { NavMenuComponent } from './components/nav-menu/nav-menu.component';
 import { HomeComponent } from './components/home/home.component';
 import { LoginComponent } from './components/login/login.component';
 import { AuthService } from './services/auth.service';
@@ -22,7 +21,7 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 export const BASE_URL = new InjectionToken<string>('BASE_URL');
 
 @NgModule({
-  declarations: [AppComponent, NavMenuComponent, HomeComponent, LoginComponent, TasksComponent],
+  declarations: [AppComponent, HomeComponent, LoginComponent, TasksComponent],
   imports: [BrowserModule, ReactiveFormsModule, AppRoutingModule, HttpClientModule, MaterialsModule, BrowserAnimationsModule],
   providers: [
     AuthService,

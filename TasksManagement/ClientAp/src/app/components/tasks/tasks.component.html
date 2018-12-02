@@ -1,3 +1,24 @@
-<p>
-  tasks works!
-</p>
+<table class="table">
+  <thead>
+    <tr>
+      <th scope="col">Title</th>
+      <th scope="col">Description</th>
+      <th scope="col">Created</th>
+      <th scope="col"></th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let task of tasks">
+      <td>{{task.title}}</td>
+      <td>{{task.description}}</td>
+      <td>{{task.created | date : 'shortDate'}}</td>
+      <td>
+        <button mat-button [matMenuTriggerFor]="contextMenu">Actions</button>
+        <mat-menu #contextMenu="matMenu">
+          <button mat-menu-item [routerLink]="['/horizontal', task.Id]" routerLinkActive="router-link-active">Edit</button>
+          <button mat-menu-item [routerLink]="['/vertical', task.Id]" routerLinkActive="router-link-active">Delete</button>
+        </mat-menu>
+      </td>
+    </tr>
+  </tbody>
+</table>
