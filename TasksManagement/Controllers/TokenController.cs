@@ -50,12 +50,21 @@ namespace TasksManagement.Controllers
 
                 if (!loginResult.Succeeded)
                 {
-                    return BadRequest();
+                    return BadRequest(new { message = "invalid username or password" });
+
                 }
 
                 var user = await _userManager.FindByNameAsync(loginModel.Username);
 
-                return Ok(GenerateToken(user));
+                return Ok(
+                    new AuthUserModel()
+                    {
+                        UserID = user.Id,
+                        Username = user.UserName,
+                        Email = user.Email,
+                        Token = GenerateToken(user)
+                    }
+                );
             }
             return BadRequest(ModelState);
 

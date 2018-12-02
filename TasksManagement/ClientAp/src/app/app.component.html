@@ -1,6 +1,29 @@
-<div class="container-fluid">
-  <div class="row">
-    <div class="col-sm-3"><app-nav-menu></app-nav-menu></div>
-    <div class="col-sm-9 body-content"><router-outlet></router-outlet></div>
-  </div>
+<div class="example-container">
+  <mat-toolbar color="primary" class="example-toolbar" *ngIf="user$ | async as user">
+    <button mat-icon-button (click)="snav.toggle()">
+      <mat-icon>menu</mat-icon>
+    </button>
+    <h1 class="example-app-name">Tasks Management</h1>
+  </mat-toolbar>
+
+  <mat-sidenav-container class="example-sidenav-container">
+    <mat-sidenav #snav fixedTopGap="56" (keydown.escape)="snav.toggle()">
+      <mat-nav-list>
+        <a mat-list-item (click)="snav.toggle()" routerLink=''>
+          <mat-icon>home</mat-icon>
+        </a>
+        <a mat-list-item (click)="snav.toggle()" routerLink='tasks'>
+          <mat-icon>account_circle</mat-icon>
+        </a>
+        <a mat-list-item (click)='snav.toggle();logout($event);'>
+          <mat-icon>exit_to_app</mat-icon>
+        </a>
+      </mat-nav-list>
+    </mat-sidenav>
+
+    <mat-sidenav-content>
+      <router-outlet></router-outlet>
+    </mat-sidenav-content>
+
+  </mat-sidenav-container>
 </div>

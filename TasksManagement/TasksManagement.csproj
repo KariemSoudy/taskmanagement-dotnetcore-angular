@@ -5,7 +5,7 @@
     <TypeScriptCompileBlocked>true</TypeScriptCompileBlocked>
     <TypeScriptToolsVersion>Latest</TypeScriptToolsVersion>
     <IsPackable>false</IsPackable>
-    <SpaRoot>ClientApp\</SpaRoot>
+    <SpaRoot>ClientAp\</SpaRoot>
     <DefaultItemExcludes>$(DefaultItemExcludes);$(SpaRoot)node_modules\**</DefaultItemExcludes>
 
     <!-- Set this to true if you enable server-side prerendering -->
@@ -22,6 +22,18 @@
     <!-- Don't publish the SPA source files, but do show them in the project files list -->
     <Content Remove="$(SpaRoot)**" />
     <None Include="$(SpaRoot)**" Exclude="$(SpaRoot)node_modules\**" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="ClientAp\angular.json" />
+    <None Include="ClientAp\e2e\tsconfig.e2e.json" />
+    <None Include="ClientAp\package-lock.json" />
+    <None Include="ClientAp\package.json" />
+    <None Include="ClientAp\src\tsconfig.app.json" />
+    <None Include="ClientAp\src\tsconfig.spec.json" />
+    <None Include="ClientAp\src\tslint.json" />
+    <None Include="ClientAp\tsconfig.json" />
+    <None Include="ClientAp\tslint.json" />
   </ItemGroup>
 
   <ItemGroup>
