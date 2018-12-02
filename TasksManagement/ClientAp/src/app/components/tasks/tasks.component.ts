@@ -62,6 +62,10 @@ export class TasksComponent implements OnInit {
     });
   }
 
+  closeNewForm() {
+    this.newFormVisible = false;
+  }
+
 
   ngOnInit() {
 
@@ -89,16 +93,17 @@ export class TasksComponent implements OnInit {
 
   addTask() {
     this.clearMessages();
+    if (this.newForm.valid) {
+      this._tasksService.addNewTask(this.newForm.value.title, this.newForm.value.description)
+        .subscribe(tasks => {
+          this.tasks = tasks;
 
-    this._tasksService.addNewTask(this.newForm.value.title, this.newForm.value.description)
-      .subscribe(tasks => {
-        this.tasks = tasks;
+          this.newForm.reset();
 
-        this.newForm.reset();
-
-        this.newFormVisible = false;
-        this.successMessage = 'Task created';
-      });
+          this.newFormVisible = false;
+          this.successMessage = 'Task created';
+        });
+    }
   }
 
   deleteTask(taskID: number) {
