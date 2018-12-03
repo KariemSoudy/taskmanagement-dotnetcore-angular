@@ -7,31 +7,34 @@ import { environment } from 'src/environments/environment';
   providedIn: 'root'
 })
 export class TasksService {
+  BASE_URL: string;
 
-  constructor(private _http: HttpClient) { }
+  constructor(private _http: HttpClient, @Inject('BASE_URL') baseUrl: string) {
+    this.BASE_URL = baseUrl;
+  }
 
   getAll() {
     return this._http
-      .get<Task[]>(environment.BaseURL + '/api/tasks');
+      .get<Task[]>(this.BASE_URL + '/api/tasks');
   }
 
   addNewTask(title: string, description: string) {
     return this._http
-      .post<Task[]>(environment.BaseURL + '/api/tasks', { title, description });
+      .post<Task[]>(this.BASE_URL + '/api/tasks', { title, description });
   }
 
   deleteTask(taskID: number) {
     return this._http
-      .delete<Task>(environment.BaseURL + '/api/tasks/' + taskID);
+      .delete<Task>(this.BASE_URL + '/api/tasks/' + taskID);
   }
 
   finishTask(taskID: number) {
     return this._http
-      .put<Task>(environment.BaseURL + '/api/tasks/' + taskID, { completed: true });
+      .put<Task>(this.BASE_URL + '/api/tasks/' + taskID, { completed: true });
   }
 
   assignTask(taskID: number, userID: string) {
     return this._http
-      .put<Task>(environment.BaseURL + '/api/tasks/' + taskID, { assignedToUser: { id: userID } });
+      .put<Task>(this.BASE_URL + '/api/tasks/' + taskID, { assignedToUser: { id: userID } });
   }
 }

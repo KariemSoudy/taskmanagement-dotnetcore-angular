@@ -7,11 +7,14 @@ import { User } from '../models/user';
   providedIn: 'root'
 })
 export class UsersService {
+  BASE_URL: string;
 
-  constructor(private _http: HttpClient) { }
+  constructor(private _http: HttpClient, @Inject('BASE_URL') baseUrl: string) {
+    this.BASE_URL = baseUrl;
+  }
 
   getAll() {
     return this._http
-      .get<User[]>(environment.BaseURL + '/api/users');
+      .get<User[]>(this.BASE_URL + '/api/users');
   }
 }

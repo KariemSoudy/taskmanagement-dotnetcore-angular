@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Inject } from '@angular/core';
 import { TasksService } from 'src/app/services/tasks.service';
 import { Task } from 'src/app/models/task';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
@@ -29,8 +29,8 @@ export class TasksComponent implements OnInit {
     private _fb: FormBuilder,
     private _authService: AuthService,
     public dialog: MatDialog,
-    public snackBar: MatSnackBar
-  ) { }
+    public snackBar: MatSnackBar)
+  { }
 
 
   newForm: FormGroup = this._fb.group({

@@ -9,10 +9,13 @@ import { environment } from 'src/environments/environment';
   providedIn: 'root'
 })
 export class AuthService {
-  private userBehavior: BehaviorSubject<User>;
   public user: Observable<User>;
+  userBehavior: BehaviorSubject<User>;
+  BASE_URL: string;
 
-  constructor(private _http: HttpClient) {
+  constructor(private _http: HttpClient, @Inject('BASE_URL') baseUrl: string) {
+    this.BASE_URL = baseUrl;
+
     this.userBehavior = new BehaviorSubject<User>(
       JSON.parse(localStorage.getItem('user'))
     );
@@ -26,7 +29,7 @@ export class AuthService {
 
   login(username: string, password: string) {
     return this._http
-      .post<User>(environment.BaseURL + '/api/token/generate', { username, password })
+      .post<User>(this.BASE_URL + '/api/token/generate', { username, password })
       .pipe(
         map(user => {
           if (user && user.token) {

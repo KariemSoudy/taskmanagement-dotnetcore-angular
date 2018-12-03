@@ -39,9 +39,14 @@ import { MAT_SNACK_BAR_DEFAULT_OPTIONS } from '@angular/material';
       useClass: UnauthorizedInterceptor,
       multi: true
     },
-    { provide: MAT_SNACK_BAR_DEFAULT_OPTIONS, useValue: { duration: 5000 } }
+    { provide: MAT_SNACK_BAR_DEFAULT_OPTIONS, useValue: { duration: 5000 } },
+    { provide: 'BASE_URL', useFactory: getBaseUrl, deps: [] }
   ],
   bootstrap: [AppComponent],
   entryComponents: [AssigntoDialogComponent]
 })
 export class AppModule { }
+
+export function getBaseUrl() {
+  return document.getElementsByTagName('base')[0].href;
+}
