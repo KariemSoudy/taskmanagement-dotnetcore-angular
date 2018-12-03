@@ -18,6 +18,7 @@ import { MaterialsModule } from './materials.module';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { UsersService } from './services/users.service';
 import { AssigntoDialogComponent } from './components/tasks/assignto-dialog/assignto-dialog.component';
+import { MAT_SNACK_BAR_DEFAULT_OPTIONS } from '@angular/material';
 
 @NgModule({
   declarations: [AppComponent, HomeComponent, LoginComponent, TasksComponent, AssigntoDialogComponent],
@@ -37,7 +38,8 @@ import { AssigntoDialogComponent } from './components/tasks/assignto-dialog/assi
       provide: HTTP_INTERCEPTORS,
       useClass: UnauthorizedInterceptor,
       multi: true
-    }
+    },
+    { provide: MAT_SNACK_BAR_DEFAULT_OPTIONS, useValue: { duration: 5000 } }
   ],
   bootstrap: [AppComponent],
   entryComponents: [AssigntoDialogComponent]

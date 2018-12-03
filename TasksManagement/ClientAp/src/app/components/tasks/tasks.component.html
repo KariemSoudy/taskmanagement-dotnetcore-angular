@@ -34,14 +34,18 @@
 
 </form>
 <!--New Task Form End-->
-<!--Alert Messages Start-->
+
+
+<!--Alert Messages Start
 <div class="alert alert-danger" *ngIf="errorMessage">
   <strong>Error</strong> {{ errorMessage }}.
 </div>
 <div class="alert alert-success" *ngIf="successMessage">
   <strong>Success</strong> {{ successMessage }}.
 </div>
-<!--Alert Messages End-->
+Alert Messages End-->
+
+
 <!--Owned Tasks Start-->
 <h1>Tasks</h1>
 <table class="table">
@@ -67,27 +71,14 @@
         <td>
           <button mat-button [matMenuTriggerFor]="contextMenu" class='actions'>Actions</button>
           <mat-menu #contextMenu="matMenu">
-
             <button (click)="deleteTask(task.id)" mat-menu-item>
               <mat-icon>delete</mat-icon>
               <em>Delete</em>
             </button>
-
             <button (click)="openDialog(task)" mat-menu-item *ngIf="(task.ownerUser.username.toLowerCase() === user.username.toLowerCase()) && isSupport">
-              <!-- <select (click)="$event.stopPropagation()" id="assigntoemployee">
-                <option value="0" [selected]="!task.assignedToUser">
-                  -No User-
-                </option>
-                <option *ngFor="let user of users" [value]="user.id" [selected]="task.assignedToUser && user.id === task.assignedToUser.id">
-                  {{user.username}}
-                </option>
-              </select> -->
-
               <mat-icon>send</mat-icon>
               <em>Assign</em>
-
             </button>
-
           </mat-menu>
         </td>
       </ng-container>
@@ -95,6 +86,8 @@
   </tbody>
 </table>
 <!--Owned Tasks End-->
+
+
 <!--My Tasks Start-->
 <ng-container *ngIf="isSupport && !isAdmin">
   <h1>Assigned Tasks</h1>

@@ -6,7 +6,7 @@ import { _CdkColumnDefBase } from '@angular/cdk/table';
 import { AuthService } from 'src/app/services/auth.service';
 import { User } from 'src/app/models/user';
 import { UsersService } from 'src/app/services/users.service';
-import { MatDialog } from '@angular/material';
+import { MatDialog, MatSnackBar } from '@angular/material';
 import { AssigntoDialogComponent } from './assignto-dialog/assignto-dialog.component';
 
 @Component({
@@ -17,8 +17,6 @@ import { AssigntoDialogComponent } from './assignto-dialog/assignto-dialog.compo
 export class TasksComponent implements OnInit {
 
   tasks: Task[];
-  errorMessage: string;
-  successMessage: string;
   newFormVisible = false;
   isAdmin = false;
   isSupport = false;
@@ -30,7 +28,8 @@ export class TasksComponent implements OnInit {
     private _usersService: UsersService,
     private _fb: FormBuilder,
     private _authService: AuthService,
-    public dialog: MatDialog
+    public dialog: MatDialog,
+    public snackBar: MatSnackBar
   ) { }
 
 
@@ -41,12 +40,6 @@ export class TasksComponent implements OnInit {
 
   showNewForm() {
     this.newFormVisible = this.isSupport;
-    this.clearMessages();
-  }
-
-  clearMessages() {
-    this.successMessage = '';
-    this.errorMessage = '';
   }
 
   openDialog(task: Task): void {
@@ -64,6 +57,10 @@ export class TasksComponent implements OnInit {
 
   closeNewForm() {
     this.newFormVisible = false;
+  }
+
+  showMessage(message: string, isSuccess: boolean) {
+    this.snackBar.open(message, 'dismiss', { panelClass: [(isSuccess === true ? 'green' : 'red') + '-snackbar'] });
   }
 
 
@@ -92,7 +89,7 @@ export class TasksComponent implements OnInit {
   }
 
   addTask() {
-    this.clearMessages();
+
     if (this.newForm.valid) {
       this._tasksService.addNewTask(this.newForm.value.title, this.newForm.value.description)
         .subscribe(tasks => {
@@ -101,45 +98,43 @@ export class TasksComponent implements OnInit {
           this.newForm.reset();
 
           this.newFormVisible = false;
-          this.successMessage = 'Task created';
+
+          this.showMessage('Task created', true);
         });
     }
   }
 
   deleteTask(taskID: number) {
-    this.clearMessages();
 
     if (confirm('Are you sure?')) {
       this._tasksService.deleteTask(taskID)
         .subscribe(task => {
           this.getAllTasks();
           if (task) {
-            this.successMessage = `Task ${task.title} deleted`;
+            this.showMessage(`Task ${task.title} deleted`, true);
           }
         }, error => {
-          this.errorMessage = error;
+          this.showMessage(error, false);
         });
     }
   }
 
   finishTask(taskID: number) {
-    this.clearMessages();
 
     if (confirm('Are you sure?')) {
       this._tasksService.finishTask(taskID)
         .subscribe(task => {
           this.getAllTasks();
           if (task) {
-            this.successMessage = `Task ${task.title} completed`;
+            this.showMessage(`Task ${task.title} completed`, true);
           }
         }, error => {
-          this.errorMessage = error;
+          this.showMessage(error, false);
         });
     }
   }
 
   assignTask(taskID: number, userID: string) {
-    this.clearMessages();
 
     this._tasksService.assignTask(taskID, userID)
       .subscribe(task => {
@@ -147,14 +142,14 @@ export class TasksComponent implements OnInit {
 
         if (task) {
           if (task.assignedToUser) {
-            this.successMessage = `Task ${task.title} assigned to ${task.assignedToUser.username}`;
+            this.showMessage(`Task ${task.title} assigned to ${task.assignedToUser.username}`, true);
           } else {
-            this.successMessage = `Task ${task.title} released`;
+            this.showMessage(`Task ${task.title} released`, true);
           }
 
         }
       }, error => {
-        this.errorMessage = error;
+        this.showMessage(error, false);
       });
   }
 }
