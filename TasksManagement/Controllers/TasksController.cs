@@ -68,14 +68,35 @@ namespace TasksManagement.Controllers
                 return BadRequest(ModelState);
             }
 
-            var task = await _tasksUnitOfWork.GetTaksRepository().GetAsync(p => p.ID == id);
+            var tasks = await _tasksUnitOfWork.GetTaksRepository().GetAsync(p => p.ID == id);
 
-            if (task == null)
+            if (tasks == null)
             {
                 return NotFound();
             }
 
-            return Ok(task);
+            var task = tasks.FirstOrDefault();
+
+            return Ok(new TaskModel
+            {
+                ID = task.ID,
+                Title = task.Title,
+                Description = task.Description,
+                Created = task.Created,
+                OwnerUser = new UserModel()
+                {
+                    ID = task.OwnerUser.Id,
+                    Username = task.OwnerUser.UserName,
+                    Email = task.OwnerUser.Email
+                },
+                AssignedToUser = task.AssignedToUser != null ? new UserModel()
+                {
+                    ID = task.AssignedToUser.Id,
+                    Username = task.AssignedToUser.UserName,
+                    Email = task.AssignedToUser.Email
+                } : null,
+                Completed = task.Completed
+            });
         }
 
         // PUT: api/Tasks/5
@@ -140,7 +161,7 @@ namespace TasksManagement.Controllers
             }
             catch (DbUpdateConcurrencyException)
             {
-                if (!TaskExists(id))
+                if (!_tasksUnitOfWork.GetTaksRepository().Get(e => e.ID == id).Any())
                 {
                     return NotFound();
                 }
@@ -176,7 +197,7 @@ namespace TasksManagement.Controllers
 
         // POST: api/Tasks
         [HttpPost]
-        public async Task<IActionResult> PostTask([FromBody] TaskModel task)
+        public async Task<IActionResult> PostTask([FromBody] TaskModel taskModel)
         {
             if (!ModelState.IsValid)
             {
@@ -185,17 +206,40 @@ namespace TasksManagement.Controllers
 
             var user = await _userManager.GetUserAsync(HttpContext.User);
 
-            _tasksUnitOfWork.GetTaksRepository().Add(new Data.Entities.Task()
+            var task = new Data.Entities.Task()
             {
-                Title = task.Title,
-                Description = task.Description,
+                Title = taskModel.Title,
+                Description = taskModel.Description,
                 OwnerUserID = user.Id,
                 Created = DateTime.Now
-            });
+            };
+
+            _tasksUnitOfWork.GetTaksRepository().Add(task);
 
             await _tasksUnitOfWork.SaveChangesAsync();
 
-            return RedirectToAction("GetTasks");
+            task = _tasksUnitOfWork.GetTaksRepository().GetAll().Where(p => p.ID == task.ID).IncludeMultiple(t => t.OwnerUser, t => t.AssignedToUser).FirstOrDefault();
+
+            return Ok(new TaskModel
+            {
+                ID = task.ID,
+                Title = task.Title,
+                Description = task.Description,
+                Created = task.Created,
+                OwnerUser = new UserModel()
+                {
+                    ID = task.OwnerUser.Id,
+                    Username = task.OwnerUser.UserName,
+                    Email = task.OwnerUser.Email
+                },
+                AssignedToUser = task.AssignedToUser != null ? new UserModel()
+                {
+                    ID = task.AssignedToUser.Id,
+                    Username = task.AssignedToUser.UserName,
+                    Email = task.AssignedToUser.Email
+                } : null,
+                Completed = task.Completed
+            });
         }
 
         // DELETE: api/Tasks/5
@@ -230,11 +274,6 @@ namespace TasksManagement.Controllers
             }
 
             return BadRequest(new { message = "You are not owner or admin to delete this task" });
-        }
-
-        private bool TaskExists(int id)
-        {
-            return _tasksUnitOfWork.GetTaksRepository().Get(e => e.ID == id).Any();
         }
     }
 }

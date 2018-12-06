@@ -1,4 +1,4 @@
-import { Component, OnInit, Inject } from '@angular/core';
+import { Component, OnInit, Inject, ViewChild } from '@angular/core';
 import { TasksService } from 'src/app/services/tasks.service';
 import { Task } from 'src/app/models/task';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
@@ -6,7 +6,7 @@ import { _CdkColumnDefBase } from '@angular/cdk/table';
 import { AuthService } from 'src/app/services/auth.service';
 import { User } from 'src/app/models/user';
 import { UsersService } from 'src/app/services/users.service';
-import { MatDialog, MatSnackBar } from '@angular/material';
+import { MatDialog, MatSnackBar, MatTableDataSource, MatPaginator } from '@angular/material';
 import { AssigntoDialogComponent } from './assignto-dialog/assignto-dialog.component';
 
 @Component({
@@ -15,28 +15,45 @@ import { AssigntoDialogComponent } from './assignto-dialog/assignto-dialog.compo
   styleUrls: ['./tasks.component.css']
 })
 export class TasksComponent implements OnInit {
-
   tasks: Task[];
+  user: User;
   newFormVisible = false;
   isAdmin = false;
   isSupport = false;
-  user: User;
-  selectedOption: string;
 
   constructor(
     private _tasksService: TasksService,
-    private _usersService: UsersService,
     private _fb: FormBuilder,
     private _authService: AuthService,
     public dialog: MatDialog,
     public snackBar: MatSnackBar) { }
-
 
   newForm: FormGroup = this._fb.group({
     title: ['', Validators.required],
     description: ['']
   });
 
+  ngOnInit() {
+
+    this.getAllTasks();
+
+    this.user = this._authService.getLoggedInUser();
+
+    if (this.user && this.user.role) {
+      if (this.user.role.toLowerCase() === 'support') {
+        this.isAdmin = false;
+        this.isSupport = true;
+      } else if (this.user.role.toLowerCase() === 'admin') {
+        this.isAdmin = true;
+        this.isSupport = false;
+      }
+    }
+  }
+
+
+  /**
+   * form methods
+   */
   showNewForm() {
     this.newFormVisible = this.isSupport;
   }
@@ -63,24 +80,9 @@ export class TasksComponent implements OnInit {
   }
 
 
-  ngOnInit() {
-
-    this.getAllTasks();
-
-    this.user = this._authService.getLoggedInUser();
-
-
-    if (this.user && this.user.role) {
-      if (this.user.role.toLowerCase() === 'support') {
-        this.isAdmin = false;
-        this.isSupport = true;
-      } else if (this.user.role.toLowerCase() === 'admin') {
-        this.isAdmin = true;
-        this.isSupport = false;
-      }
-    }
-  }
-
+  /**
+   * api tasks methods
+   */
   getAllTasks() {
     this._tasksService.getAll().subscribe(tasks => {
       this.tasks = tasks;
@@ -91,14 +93,14 @@ export class TasksComponent implements OnInit {
 
     if (this.newForm.valid) {
       this._tasksService.addNewTask(this.newForm.value.title, this.newForm.value.description)
-        .subscribe(tasks => {
-          this.tasks = tasks;
+        .subscribe(task => {
+          this.getAllTasks();
 
           this.newForm.reset();
 
           this.newFormVisible = false;
 
-          this.showMessage('Task created', true);
+          this.showMessage(`Task "${task.title}" created`, true);
         });
     }
   }
@@ -110,7 +112,7 @@ export class TasksComponent implements OnInit {
         .subscribe(task => {
           this.getAllTasks();
           if (task) {
-            this.showMessage(`Task ${task.title} deleted`, true);
+            this.showMessage(`Task "${task.title}" deleted`, true);
           }
         }, error => {
           this.showMessage(error, false);
@@ -125,7 +127,7 @@ export class TasksComponent implements OnInit {
         .subscribe(task => {
           this.getAllTasks();
           if (task) {
-            this.showMessage(`Task ${task.title} completed`, true);
+            this.showMessage(`Task "${task.title}" completed`, true);
           }
         }, error => {
           this.showMessage(error, false);
@@ -141,9 +143,9 @@ export class TasksComponent implements OnInit {
 
         if (task) {
           if (task.assignedToUser) {
-            this.showMessage(`Task ${task.title} assigned to ${task.assignedToUser.username}`, true);
+            this.showMessage(`Task "${task.title}" assigned to ${task.assignedToUser.username}`, true);
           } else {
-            this.showMessage(`Task ${task.title} released`, true);
+            this.showMessage(`Task "${task.title}" released`, true);
           }
 
         }

@@ -20,7 +20,7 @@ export class TasksService {
 
   addNewTask(title: string, description: string) {
     return this._http
-      .post<Task[]>(this.BASE_URL + 'api/tasks', { title, description });
+      .post<Task>(this.BASE_URL + 'api/tasks', { title, description });
   }
 
   deleteTask(taskID: number) {
