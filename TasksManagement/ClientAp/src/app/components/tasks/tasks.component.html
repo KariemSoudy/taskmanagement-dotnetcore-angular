@@ -1,5 +1,5 @@
 <!--New Task Button  Start-->
-<button *ngIf="isSupport" mat-list-item (click)="showNewForm()">
+<button mat-raised-button color="primary" *ngIf="isSupport" (click)="showNewForm()">
   <mat-icon>library_add</mat-icon>
   <em>New Task</em>
 </button>
@@ -7,12 +7,11 @@
 
 
 <!--Refresh Tasks Button  Start-->
-<button mat-list-item (click)="getAllTasks()">
+<button mat-raised-button color="primary" (click)="getAllTasks()">
   <mat-icon>refresh</mat-icon>
   <em>Reload</em>
 </button>
 <!--Refresh Tasks Button  End-->
-
 
 <!--New Task Form Start-->
 <form *ngIf="isSupport && newFormVisible" class="form-signin needs-validation" [formGroup]="newForm" (ngSubmit)="addTask()">
@@ -24,26 +23,16 @@
   <label for="description" class="sr-only">Description</label>
   <input type="text" formControlName="description" class="form-control" placeholder="description" required />
 
-  <button class="btn btn-lg btn-primary btn-block" type="submit" [disabled]="!newForm.valid">
+  <button mat-raised-button color="primary" class="btn-block" type="submit" [disabled]="!newForm.valid">
     Save
   </button>
 
-  <button class="btn btn-lg btn-secondary btn-block" type="reset" (click)="closeNewForm()">
+  <button mat-raised-button color="warn" class="btn-block" type="reset" (click)="closeNewForm()">
     Cancel
   </button>
 
 </form>
 <!--New Task Form End-->
-
-
-<!--Alert Messages Start
-<div class="alert alert-danger" *ngIf="errorMessage">
-  <strong>Error</strong> {{ errorMessage }}.
-</div>
-<div class="alert alert-success" *ngIf="successMessage">
-  <strong>Success</strong> {{ successMessage }}.
-</div>
-Alert Messages End-->
 
 
 <!--Owned Tasks Start-->
@@ -67,15 +56,17 @@ Alert Messages End-->
         </td>
         <td>{{ task.description }}</td>
         <td><span *ngIf="task.assignedToUser">{{task.assignedToUser.username}}</span></td>
-        <td>{{ task.created | date: 'shortDate' }}</td>
+        <td>{{ task.created | date: 'EEEE, MM/dd/yyyy, h:mm a'}}</td>
         <td>
-          <button mat-button [matMenuTriggerFor]="contextMenu" class='actions'>Actions</button>
+          <button mat-icon-button color="primary" [matMenuTriggerFor]="contextMenu">
+            <mat-icon>more_vert</mat-icon>
+          </button>
           <mat-menu #contextMenu="matMenu">
-            <button (click)="deleteTask(task.id)" mat-menu-item>
+            <button mat-raised-button color="warn" (click)="deleteTask(task.id)">
               <mat-icon>delete</mat-icon>
               <em>Delete</em>
             </button>
-            <button (click)="openDialog(task)" mat-menu-item *ngIf="(task.ownerUser.username.toLowerCase() === user.username.toLowerCase()) && isSupport">
+            <button mat-raised-button color="primary" (click)="openDialog(task)" *ngIf="(task.ownerUser.username.toLowerCase() === user.username.toLowerCase()) && isSupport">
               <mat-icon>send</mat-icon>
               <em>Assign</em>
             </button>
@@ -107,11 +98,13 @@ Alert Messages End-->
           <td>{{ task.title }}</td>
           <td>{{ task.description }}</td>
           <td><span *ngIf="task.assignedToUser">{{task.assignedToUser.username}}</span></td>
-          <td>{{ task.created | date: 'shortDate' }}</td>
+          <td>{{ task.created | date: 'EEEE, MM/dd/yyyy, h:mm a'}}</td>
           <td>
-            <button mat-button [matMenuTriggerFor]="contextMenu" class='actions'>Actions</button>
+            <button mat-icon-button color="primary" [matMenuTriggerFor]="contextMenu">
+              <mat-icon>more_vert</mat-icon>
+            </button>
             <mat-menu #contextMenu="matMenu">
-              <button (click)="finishTask(task.id)" mat-menu-item>
+              <button mat-raised-button color="primary" (click)="finishTask(task.id)">
                 <mat-icon>check</mat-icon>
                 <em>Done</em>
               </button>

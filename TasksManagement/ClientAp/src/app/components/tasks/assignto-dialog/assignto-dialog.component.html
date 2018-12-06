@@ -12,6 +12,6 @@
   </mat-form-field>
 </div>
 <div mat-dialog-actions>
-  <button mat-button (click)="onNoClick()">Cancel</button>
-  <button mat-button [mat-dialog-close]="data.assignedToUser.id" [disabled]="assignButtonDisabled">Assign</button>
+  <button mat-raised-button color="primary" [mat-dialog-close]="data.assignedToUser.id" [disabled]="assignButtonDisabled">Assign</button>
+  <button mat-raised-button color="warn" (click)="onNoClick()">Cancel</button>
 </div>
