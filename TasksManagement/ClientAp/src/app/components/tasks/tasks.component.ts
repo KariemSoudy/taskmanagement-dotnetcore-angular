@@ -29,8 +29,7 @@ export class TasksComponent implements OnInit {
     private _fb: FormBuilder,
     private _authService: AuthService,
     public dialog: MatDialog,
-    public snackBar: MatSnackBar)
-  { }
+    public snackBar: MatSnackBar) { }
 
 
   newForm: FormGroup = this._fb.group({
