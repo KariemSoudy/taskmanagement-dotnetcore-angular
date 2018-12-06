@@ -15,6 +15,6 @@ export class UsersService {
 
   getAll() {
     return this._http
-      .get<User[]>(this.BASE_URL + '/api/users');
+      .get<User[]>(this.BASE_URL + 'api/users');
   }
 }

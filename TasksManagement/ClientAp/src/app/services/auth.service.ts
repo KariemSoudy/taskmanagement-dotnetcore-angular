@@ -29,7 +29,7 @@ export class AuthService {
 
   login(username: string, password: string) {
     return this._http
-      .post<User>(this.BASE_URL + '/api/token/generate', { username, password })
+      .post<User>(this.BASE_URL + 'api/token/generate', { username, password })
       .pipe(
         map(user => {
           if (user && user.token) {

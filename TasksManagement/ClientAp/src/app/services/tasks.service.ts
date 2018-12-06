@@ -15,26 +15,26 @@ export class TasksService {
 
   getAll() {
     return this._http
-      .get<Task[]>(this.BASE_URL + '/api/tasks');
+      .get<Task[]>(this.BASE_URL + 'api/tasks');
   }
 
   addNewTask(title: string, description: string) {
     return this._http
-      .post<Task[]>(this.BASE_URL + '/api/tasks', { title, description });
+      .post<Task[]>(this.BASE_URL + 'api/tasks', { title, description });
   }
 
   deleteTask(taskID: number) {
     return this._http
-      .delete<Task>(this.BASE_URL + '/api/tasks/' + taskID);
+      .delete<Task>(this.BASE_URL + 'api/tasks/' + taskID);
   }
 
   finishTask(taskID: number) {
     return this._http
-      .put<Task>(this.BASE_URL + '/api/tasks/' + taskID, { completed: true });
+      .put<Task>(this.BASE_URL + 'api/tasks/' + taskID, { completed: true });
   }
 
   assignTask(taskID: number, userID: string) {
     return this._http
-      .put<Task>(this.BASE_URL + '/api/tasks/' + taskID, { assignedToUser: { id: userID } });
+      .put<Task>(this.BASE_URL + 'api/tasks/' + taskID, { assignedToUser: { id: userID } });
   }
 }
